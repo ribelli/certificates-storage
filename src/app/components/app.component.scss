@@ -1,0 +1,47 @@
+$xsmall: 320px;
+$small: 768px;
+$medium: 1200px;
+$lightGrey: #e8e8e8;
+
+.main-container {
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0 auto;
+
+  @media (min-width: $xsmall) {
+    max-width: 90vw;
+  }
+
+  @media (min-width: $small) {
+    max-width: 80vw;
+  }
+
+  @media (min-width: $medium) {
+    max-width: 60vw;
+  }
+
+  .left-side,
+  .right-side{
+    flex: 1;
+    padding: 20px;
+    margin: 20px;
+
+    @media (min-width: $xsmall) {
+      max-width: 35vw;
+    }
+
+    @media (min-width: $small) {
+      max-width: 40vw;
+    }
+  }
+
+  .left-side {
+    border: solid 1px $lightGrey;
+  }
+
+  .right-side {
+    border: dashed 4px $lightGrey;
+  }
+}

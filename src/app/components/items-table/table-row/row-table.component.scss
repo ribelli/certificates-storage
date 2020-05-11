@@ -1,0 +1,30 @@
+$softRed: #b53f3f;
+
+.c-row {
+  &__button {
+    font-size: 10px;
+    color: $softRed;
+    border: none;
+    background: transparent;
+
+    &:hover {
+      opacity: 0.7;
+      cursor: pointer;
+    }
+  }
+
+  &__item {
+    display: flex;
+    color: #333333;
+    padding: 10px 15px;
+    margin-bottom: 10px;
+    border: 1px solid #ececec;
+    box-shadow: 10px 10px 5px -10px rgba(0,0,0,0.75);
+
+    & > div {
+      text-overflow: ellipsis;
+      overflow: hidden;
+      white-space: nowrap;
+    }
+  }
+}

@@ -1,0 +1,18 @@
+<div class="c-upload"
+     appDragAndDrop
+     (click)="fileInput.click()"
+     (onFileDropped)="handleFileBrowse($event)">
+    <input type="file" hidden
+           #fileInput
+           (change)="fileChanged($event)">
+    <div class="c-upload__text">
+        {{ uploadText }}
+    </div>
+</div>
+<div class="items-list" *ngIf="files.length > 0">
+    <div class="items-list__container" *ngFor="let file of files;">
+        <div class="items-list__name" data-filetype="cer">
+            <p>{{ file }}</p>
+        </div>
+    </div>
+</div>

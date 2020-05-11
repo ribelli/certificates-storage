@@ -1,0 +1,15 @@
+.items-table {
+  margin-bottom: 10px;
+
+  &__header{
+    font-size: 12px;
+    color: #333333;
+    margin-bottom: 5px;
+  }
+
+  &__list {
+    max-height: 66vh;
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
+}

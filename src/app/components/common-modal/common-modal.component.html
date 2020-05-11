@@ -1,0 +1,23 @@
+<h2 mat-dialog-title>{{data.generalInfo.text}}</h2>
+<div mat-dialog-content class="common-modal">
+  <p>{{data.generalInfo.text}}</p>
+  <p *ngIf="data.generalInfo.info.data.notBefore">
+    Not before: {{data.generalInfo.info.data.notBefore}}</p>
+  <p *ngIf="data.generalInfo.info.data.notAfter">
+    Not after: {{data.generalInfo.info.data.notAfter}}</p>
+  <div class="content _light-blue" *ngIf="data.generalInfo.info.data.issuer">
+    <h3>ISSUER</h3>
+    <div *ngFor="let data of data.generalInfo.info.data.issuer;">
+      <p>{{data.name}}: {{data.value}}</p>
+    </div>
+  </div>
+  <div class="content _light-grey" *ngIf="data.generalInfo.info.data.subject">
+    <h3>SUBJECT</h3>
+    <div *ngFor="let data of data.generalInfo.info.data.subject;">
+      <p>{{data.name}}: {{data.value}}</p>
+    </div>
+  </div>
+</div>
+<div mat-dialog-actions>
+  <button mat-button (click)="onOKClick()">OK</button>
+</div>

@@ -1,0 +1,45 @@
+$commonBlue: #1c8adb;
+$borderColor: #f1f1f1;
+
+.c-upload {
+    display: flex;
+    height: 200px;
+    align-items: center;
+
+    &:hover {
+        opacity: 0.1;
+        cursor: pointer;
+    }
+
+    &__text {
+        color: #00000099;
+        text-align: center;
+        padding: 0 20px;
+    }
+}
+
+.items-list {
+    max-height: 200px;
+    border: 1px solid $borderColor;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding: 10px 0;
+    margin-top: 5px;
+
+    &__container {
+        display: flex;
+        width: 80%;
+        justify-content: space-between;
+        color: $commonBlue;
+        border: 1px dashed $commonBlue;
+        background: #ffffff;
+        margin: 10px auto;
+        padding: 5px;
+    }
+
+    &__name {
+      min-width: 120px;
+      white-space: nowrap;
+      overflow-x: auto;
+    }
+}

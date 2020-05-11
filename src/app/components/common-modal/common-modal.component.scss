@@ -1,0 +1,13 @@
+.common-modal {
+  .content {
+    padding: 5px 15px;
+
+    &._light-grey {
+      background-color: lightgrey;
+    }
+
+    &._light-blue {
+      background-color: lightblue;
+    }
+  }
+}
