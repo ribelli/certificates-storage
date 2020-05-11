@@ -2,7 +2,6 @@
 > Application for convenient storage and viewing of certificates
 
 
----
 ## Installation
 
 
