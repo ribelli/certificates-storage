@@ -1,7 +1,5 @@
-import { Component } from '@angular/core';
+import {Component} from '@angular/core';
 import {CertificateService} from '../../services/certificate.service';
-//import {CommonModal} from '../common-modal/common-modal.component';
-import {MatDialog} from '@angular/material';
 
 const UPLOAD_TEXT = 'Drop or upload your certificate here to send them';
 
@@ -13,24 +11,22 @@ const UPLOAD_TEXT = 'Drop or upload your certificate here to send them';
 
 export class FileUploaderComponent {
     private uploadText: string = UPLOAD_TEXT;
-    private file: any;
     private fileName: string;
     private files: any = [];
 
-    constructor(public dialog: MatDialog, private certificateService: CertificateService) { }
+    constructor(private certificateService: CertificateService) { }
 
     fileChanged(event): void {
       if (event.target.files && event.target.files.length) {
           this.fileName = event.target.files[0].name;
-          const [file] = event.target.files;
-          this.file = event.target.files[0];
+          let file = event.target.files[0];
           this.handleFileBrowse(file);
       }
     }
 
     handleFileBrowse(file: File): void {
         const tempReader = new FileReader();
-        if (localStorage.getItem(file.name) === null) {
+        if (window.localStorage.getItem(file.name) === null) {
             tempReader.onload = (event) => {
                 event.preventDefault();
                 this.addToStorage(tempReader.result);
@@ -42,17 +38,10 @@ export class FileUploaderComponent {
     }
 
     addToStorage(file): void {
-      this.certificateService.upload(this.file.name, file);
+      this.certificateService.upload(this.fileName, file);
     }
 
     openDialog(): void {
       alert('This file is exist');
-        // this.dialog.open(CommonModal, {
-        //     width: '250px',
-        //     data: {
-        //       generalInfo: {
-        //       info: 'This file is exist' }
-        //     }
-        // });
     }
 }

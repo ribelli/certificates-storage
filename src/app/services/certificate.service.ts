@@ -1,9 +1,9 @@
-import { Injectable, NgModule } from '@angular/core';
-//import {CertificateItem} from '../entities/certificate-item.interface';
-import { BrowserModule } from '@angular/platform-browser';
-import { Certificate } from 'pkijs';
+import {Injectable, NgModule} from '@angular/core';
+import {BrowserModule} from '@angular/platform-browser';
+import {Certificate} from 'pkijs';
 import * as moment from 'moment';
-import { Observable, Subject } from 'rxjs';
+import {Observable, Subject} from 'rxjs';
+import {CERTIFICATE_MAP} from '../entities/certificate-map';
 
 
 @Injectable({
@@ -13,6 +13,7 @@ import { Observable, Subject } from 'rxjs';
   imports: [BrowserModule],
 })
 export class CertificateService {
+  private certificateMap: object = CERTIFICATE_MAP;
   private fileList: string[] = new Array<string>();
   private fileList$: Subject<string[]> = new Subject<string[]>();
 
@@ -33,17 +34,19 @@ export class CertificateService {
 
   public remove(fileName): void {
     this.fileList.splice(
-      this.fileList.findIndex((name) => name === fileName),
+      this.fileList.findIndex(name => name === fileName),
       1
     );
     this.fileList$.next(this.fileList);
-    localStorage.removeItem(fileName);
+    window.localStorage.removeItem(fileName);
   }
 
-  public list(): Observable<string[]> {
-
-    for (let i = 0; i < localStorage.length; i++) {
-      this.fileList.push(Object.entries(localStorage)[i][0]);
+  public getListFromStorage(): Observable<string[]> {
+    for (let i = 0; i < window.localStorage.length; i++) {
+      let currentObject = Object.entries(window.localStorage)[i];
+      if (currentObject[1].startsWith('data:application/x-x509-ca-cert;base64,')){
+        this.fileList.push(currentObject[0]);
+      }
     }
 
     this.fileList$.next(this.fileList);
@@ -51,12 +54,28 @@ export class CertificateService {
     return this.fileList$;
   }
 
+  getGeneralInfo(certificate: Certificate, value: 'subject'| 'issuer') {
+    let arr = [];
+    for (const typeAndValue of certificate[value].typesAndValues) {
+      let typeValue = this.certificateMap[typeAndValue.type];
+
+      if(typeof typeValue === 'undefined') {
+        typeValue = typeAndValue.type;
+      }
+
+      const subjectValue = typeAndValue.value.valueBlock.value;
+
+      arr.push({name: typeValue, value:subjectValue});
+    }
+    return arr;
+  }
+
   private saveToStorage(key: string, b64Result: string) {
-    localStorage.setItem(key, b64Result);
+    window.localStorage.setItem(key, b64Result);
   }
 
   getFromStorage(key: string) {
-    return localStorage.getItem(key);
+    return window.localStorage.getItem(key);
   }
 
   static trimUTCformat(typeOfDate) {
@@ -65,26 +84,13 @@ export class CertificateService {
   }
 
   base64ToArrayBuffer(base64) {
-    let startIndex = base64.indexOf("base64,") + 7;
+    let startIndex = base64.indexOf('base64,') + 7;
     let b64 = base64.substr(startIndex);
-    let binary_string = atob(b64);
-    let bytes = new Uint8Array(binary_string.length);
-    for (let i = 0; i < binary_string.length; i++) {
-      bytes[i] = binary_string.charCodeAt(i);
+    let binaryString = atob(b64);
+    let bytes = new Uint8Array(binaryString.length);
+    for (let i = 0; i < binaryString.length; i++) {
+      bytes[i] = binaryString.charCodeAt(i);
     }
     return bytes.buffer;
-  }
-
-  blobToBase64(certificate: Certificate): Observable<{}> {
-    const fileReader = new FileReader();
-
-    const observable = new Observable((observer) => {
-      fileReader.onloadend = () => {
-        observer.next(fileReader.result);
-        observer.complete();
-      };
-    });
-    fileReader.readAsDataURL(certificate);
-    return observable;
   }
 }

@@ -1,6 +1,6 @@
 <div class="items-table">
   <div class="items-table__header">{{ headerText }}</div>
-  <div *ngIf="isEmptyList">{{ emptyListOfCertificates }}</div>
+  <div *ngIf="fileList.length === 0">{{ emptyListOfCertificates }}</div>
   <div class="items-table__list">
     <app-row-table
       *ngFor="let certificate of fileList; let i = index"

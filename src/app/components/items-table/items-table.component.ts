@@ -1,12 +1,10 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { RowTableComponent } from './table-row/row-table.component';
-import { Certificate } from 'pkijs';
-import { MatDialog, MatPaginator } from '@angular/material';
-import { CommonModal } from '../common-modal/common-modal.component';
-import { Observable} from 'rxjs';
-import { CertificateService } from '../../services/certificate.service';
+import {Component, OnInit} from '@angular/core';
+import {Certificate} from 'pkijs';
+import {MatDialog} from '@angular/material';
+import {CommonModal} from '../common-modal/common-modal.component';
+import {Observable} from 'rxjs';
+import {CertificateService} from '../../services/certificate.service';
 import * as asn1js from 'asn1js';
-import {CERTIFICATE_MAP} from '../../entities/certificate-map';
 
 
 const HEADER_TEXT = 'Existing certificates:';
@@ -19,14 +17,9 @@ const EMPTY_LIST = 'Unfortunately, this list is empty';
 })
 
 export class ItemsTableComponent implements OnInit {
-  @ViewChild(RowTableComponent) child: RowTableComponent;
-  @ViewChild(MatPaginator) paginator: MatPaginator;
   private headerText: string = HEADER_TEXT;
   private emptyListOfCertificates: string = EMPTY_LIST;
-  private isEmptyList: boolean;
-  private certificateMap: object = CERTIFICATE_MAP;
-  public certificates = [];
-  public fileList$: Observable<string[]> = this.certificateService.list();
+  public fileList$: Observable<string[]> = this.certificateService.getListFromStorage();
   public fileList: string[] = [];
 
   constructor(
@@ -40,17 +33,15 @@ export class ItemsTableComponent implements OnInit {
     });
 
     this.certificateService.get();
-    this.isEmptyList = this.fileList.length === 0;
   }
 
   showCurrentCertificateInfo(certificate: string): void {
-    let generalInfo = this.getCertificateInfo(certificate);
-    this.openDialog(certificate, generalInfo);
+    this.openDialog(certificate, this.getCertificateInfo(certificate));
   }
 
-  getCertificateInfo(certificate) {
-    let result = this.mapKeyValueFromStorage(certificate);
-    let arrayBuffer = this.certificateService.base64ToArrayBuffer(result);
+  private getCertificateInfo(certificate: string) {
+    const currentCertificate = this.mapKeyValueFromStorage(certificate);
+    const arrayBuffer = this.certificateService.base64ToArrayBuffer(currentCertificate);
 
     return {
       text: certificate,
@@ -58,51 +49,32 @@ export class ItemsTableComponent implements OnInit {
     };
   }
 
-  mapKeyValueFromStorage(certificate: string) {
+  private mapKeyValueFromStorage(certificate: string) {
     return this.certificateService.getFromStorage(this.getKeyByValue(certificate));
   }
 
-  getKeyByValue(value) {
-    return Object.keys(localStorage).find(key => key === value);
+  private getKeyByValue(value) {
+    return Object.keys(window.localStorage).find(key => key === value);
   }
 
-  decodingCertificate(element) {
-    const asn1 = asn1js.fromBER(element);
+  private decodingCertificate(element) {
+    const asn1Result = asn1js.fromBER(element);
 
-    if (asn1.offset === (-1)) {
+    if (asn1Result.offset === (-1)) {
       console.log('Can not parse binary data');
     }
 
-    const certificate = new Certificate({ schema: asn1.result });
+    const certificate = new Certificate({ schema: asn1Result.result });
 
     return {
       notBefore: CertificateService.trimUTCformat(certificate.notBefore),
       notAfter: CertificateService.trimUTCformat(certificate.notAfter),
-      issuer: this.getGeneralInfo(certificate, 'issuer'),
-      subject: this.getGeneralInfo(certificate, 'subject'),
+      issuer: this.certificateService.getGeneralInfo(certificate, 'issuer'),
+      subject: this.certificateService.getGeneralInfo(certificate, 'subject'),
     };
   }
 
-    getGeneralInfo(certificate: Certificate, value: 'subject'| 'issuer') {
-      let arr = [];
-      for (const typeAndValue of certificate[value].typesAndValues) {
-        let typeValue = this.certificateMap[typeAndValue.type];
-
-        if(typeof typeValue === "undefined") {
-          typeValue = typeAndValue.type;
-        }
-
-        const subjectValue = typeAndValue.value.valueBlock.value;
-
-        arr.push({name: typeValue, value:subjectValue});
-      }
-      return arr;
-    }
-
-  onElementDeleted(certificate: any): void {
-    if (!this.certificates) {
-      return;
-    }
+  onElementDeleted(certificate: string): void {
     this.certificateService.remove(certificate);
   }
 
@@ -118,3 +90,13 @@ export class ItemsTableComponent implements OnInit {
     });
   }
 }
+
+// const config = new MatDialogConfig<DialogData>();
+// config.width = '80vw';
+// config.data = {
+//   text: certificate,
+//   generalInfo: {
+//     info: generalInfo
+//   }
+// } as DialogData;
+// this.dialog.open<CommonModal, DialogData, void>(CommonModal, config);

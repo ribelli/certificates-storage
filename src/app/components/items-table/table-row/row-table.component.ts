@@ -26,8 +26,7 @@ import {
 
 export class RowTableComponent {
     @Input() public item: CertificateItem;
-    @Input() public element: any;
-    @Output() public elementDeleted: EventEmitter<any> = new EventEmitter();
+    @Output() public elementDeleted: EventEmitter<void> = new EventEmitter();
 
     deleteElement(): void {
         this.elementDeleted.emit();

@@ -10,7 +10,7 @@ const BASIC_OPACITY = '1';
 })
 
 export class DragAndDropDirective {
-  @Output() onFileDropped = new EventEmitter<any>();
+  @Output() onFileDropped = new EventEmitter<File>();
   @HostBinding('style.background-color') private background = BASIC_COLOR;
   @HostBinding('style.opacity') private opacity = BASIC_OPACITY;
 
