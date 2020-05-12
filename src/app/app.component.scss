@@ -10,8 +10,10 @@ $lightGrey: #e8e8e8;
   align-items: center;
   margin: 0 auto;
 
-  @media (min-width: $xsmall) {
+  @media (min-width: $xsmall) and (max-width: $small) {
     max-width: 90vw;
+    flex-wrap: wrap-reverse;
+    padding: 25px 0;
   }
 
   @media (min-width: $small) {
