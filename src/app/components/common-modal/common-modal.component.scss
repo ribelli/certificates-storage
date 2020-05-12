@@ -2,6 +2,10 @@
   .content {
     padding: 5px 15px;
 
+    &._beige {
+      background-color: #f7eee3;
+    }
+
     &._light-grey {
       background-color: lightgrey;
     }
@@ -9,5 +13,11 @@
     &._light-blue {
       background-color: lightblue;
     }
+  }
+
+  &__title {
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
   }
 }

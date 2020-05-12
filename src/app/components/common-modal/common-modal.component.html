@@ -1,8 +1,11 @@
-<h2 mat-dialog-title>{{ data.generalInfo.text }}</h2>
 <div mat-dialog-content class="common-modal">
-  <p>{{ data.generalInfo.text }}</p>
-  <p *ngIf="notBefore">Not before: {{ notBefore }}</p>
-  <p *ngIf="notAfter">Not after: {{ notAfter }}</p>
+  <h3 mat-dialog-title class="common-modal__title">
+    {{ data.generalInfo.info.text }}
+  </h3>
+  <div class="content _beige">
+    <p *ngIf="notBefore">Not before: {{ notBefore }}</p>
+    <p *ngIf="notAfter">Not after: {{ notAfter }}</p>
+  </div>
 
   <div class="content _light-blue" *ngIf="issuer">
     <h3>ISSUER</h3>

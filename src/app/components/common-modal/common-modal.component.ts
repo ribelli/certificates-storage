@@ -36,5 +36,6 @@ export class CommonModal {
 
   onOKClick(): void {
     this.dialogRef.close();
+    console.log(this.data)
   }
 }
