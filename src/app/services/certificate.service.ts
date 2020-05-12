@@ -1,9 +1,9 @@
 import {Injectable, NgModule} from '@angular/core';
 import {BrowserModule} from '@angular/platform-browser';
 import {Certificate} from 'pkijs';
-import * as moment from 'moment';
 import {Observable, Subject} from 'rxjs';
 import {CERTIFICATE_MAP} from '../entities/certificate-map';
+import {format} from 'date-fns';
 
 
 @Injectable({
@@ -21,11 +21,6 @@ export class CertificateService {
     this.fileList.push(fileName);
     this.fileList$.next(this.fileList);
     this.saveToStorage(fileName, fileContent);
-  }
-
-  public download(fileName: string): void {
-    this.fileList.push(fileName);
-    this.fileList$.next(this.fileList);
   }
 
   public get(): void {
@@ -54,7 +49,7 @@ export class CertificateService {
     return this.fileList$;
   }
 
-  getGeneralInfo(certificate: Certificate, value: 'subject'| 'issuer') {
+  getGeneralInfo(certificate: Certificate, value: 'subject' | 'issuer') {
     let arr = [];
     for (const typeAndValue of certificate[value].typesAndValues) {
       let typeValue = this.certificateMap[typeAndValue.type];
@@ -79,8 +74,8 @@ export class CertificateService {
   }
 
   static trimUTCformat(typeOfDate) {
-    const currentFormat = 'YYYY/MM/DD';
-    return  moment(new Date(typeOfDate.value.toString())).format(currentFormat);
+    const currentFormat = 'yyyy/MM/dd';
+    return format(new Date(typeOfDate.value.toString()),currentFormat);
   }
 
   base64ToArrayBuffer(base64) {

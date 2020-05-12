@@ -29,7 +29,9 @@ import {MatButtonModule, MatDialogModule} from '@angular/material';
     ItemsTableComponent,
     RowTableComponent,
     FileUploaderComponent,
-    CommonModal
+    CommonModal,
+    MatButtonModule,
+    MatDialogModule
   ],
   entryComponents: [CommonModal],
   providers: [],

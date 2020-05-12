@@ -1,5 +1,5 @@
 import {Component, Inject} from '@angular/core';
-import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
+import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material';
 
 
 export interface DialogData {
@@ -18,7 +18,7 @@ export interface DialogData {
 }
 
 @Component({
-  selector: 'app-common-modal',
+  selector: 'common-modal',
   templateUrl: 'common-modal.component.html',
   styleUrls: ['./common-modal.component.scss']
 })
