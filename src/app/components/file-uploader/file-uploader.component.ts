@@ -17,7 +17,11 @@ export class FileUploaderComponent {
     constructor(private certificateService: CertificateService) { }
 
     fileChanged(event): void {
-      if (event.target.files && event.target.files.length) {
+      if (typeof event.target === 'undefined') {
+          this.fileName = event.name;
+          this.handleFileBrowse(event);
+      }
+      else if (event.target.files && event.target.files.length) {
           this.fileName = event.target.files[0].name;
           let file = event.target.files[0];
           this.handleFileBrowse(file);

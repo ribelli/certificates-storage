@@ -1,7 +1,7 @@
 <div class="c-upload"
      appDragAndDrop
      (click)="fileInput.click()"
-     (onFileDropped)="handleFileBrowse($event)">
+     (onFileDropped)="fileChanged($event[0])">
     <input type="file" hidden
            #fileInput
            (change)="fileChanged($event)">
