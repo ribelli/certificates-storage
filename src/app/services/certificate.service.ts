@@ -4,6 +4,7 @@ import {Certificate} from 'pkijs';
 import {Observable, Subject} from 'rxjs';
 import {CERTIFICATE_MAP} from '../entities/certificate-map';
 import {format} from 'date-fns';
+import * as asn1js from 'asn1js';
 
 
 @Injectable({
@@ -13,14 +14,14 @@ import {format} from 'date-fns';
   imports: [BrowserModule],
 })
 export class CertificateService {
-  private certificateMap: object = CERTIFICATE_MAP;
-  private fileList: string[] = new Array<string>();
+  private static certificateMap = CERTIFICATE_MAP;
+  private fileList: Certificate[] = [];
   private fileList$: Subject<string[]> = new Subject<string[]>();
 
   public upload(fileName: string, fileContent: any): void {
     this.fileList.push(fileName);
     this.fileList$.next(this.fileList);
-    this.saveToStorage(fileName, fileContent);
+    CertificateService.saveToStorage(fileName, fileContent);
   }
 
   public get(): void {
@@ -44,15 +45,31 @@ export class CertificateService {
       }
     }
 
-    this.fileList$.next(this.fileList);
-
     return this.fileList$;
   }
 
-  getGeneralInfo(certificate: Certificate, value: 'subject' | 'issuer') {
+  public static decodingCertificate(element) {
+    const asn1Result = asn1js.fromBER(element);
+
+    if (asn1Result.offset === (-1)) {
+      console.log('Can not parse binary data');
+    }
+
+    const certificate = new Certificate({ schema: asn1Result.result });
+    console.log(certificate)
+
+    return {
+      notBefore: CertificateService.trimUTCformat(certificate.notBefore),
+      notAfter: CertificateService.trimUTCformat(certificate.notAfter),
+      issuer: CertificateService.getGeneralInfo(certificate, 'issuer'),
+      subject: CertificateService.getGeneralInfo(certificate, 'subject'),
+    };
+  }
+
+  private static getGeneralInfo(certificate: Certificate, value: 'subject' | 'issuer') {
     let arr = [];
     for (const typeAndValue of certificate[value].typesAndValues) {
-      let typeValue = this.certificateMap[typeAndValue.type];
+      let typeValue = CertificateService.certificateMap[typeAndValue.type];
 
       if(typeof typeValue === 'undefined') {
         typeValue = typeAndValue.type;
@@ -65,11 +82,11 @@ export class CertificateService {
     return arr;
   }
 
-  private saveToStorage(key: string, b64Result: string) {
+  private static saveToStorage(key: string, b64Result: string) {
     window.localStorage.setItem(key, b64Result);
   }
 
-  getFromStorage(key: string) {
+  public static getFromStorage(key: string) {
     return window.localStorage.getItem(key);
   }
 
@@ -78,7 +95,7 @@ export class CertificateService {
     return format(new Date(typeOfDate.value.toString()),currentFormat);
   }
 
-  base64ToArrayBuffer(base64) {
+  public static base64ToArrayBuffer(base64) {
     let startIndex = base64.indexOf('base64,') + 7;
     let b64 = base64.substr(startIndex);
     let binaryString = atob(b64);

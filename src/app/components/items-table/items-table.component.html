@@ -3,7 +3,7 @@
   <div *ngIf="fileList.length === 0">{{ emptyListOfCertificates }}</div>
   <div class="items-table__list">
     <app-row-table
-      *ngFor="let certificate of fileList; let i = index"
+      *ngFor="let certificate of fileList; trackBy: trackByID;"
       [item]="certificate"
       (click)="showCurrentCertificateInfo(certificate)"
       (elementDeleted)="onElementDeleted(certificate)"></app-row-table>

@@ -16,7 +16,7 @@ export class FileUploaderComponent {
 
     constructor(private certificateService: CertificateService) { }
 
-    fileChanged(event): void {
+    private fileChanged(event): void {
       if (typeof event.target === 'undefined') {
           this.fileName = event.name;
           this.handleFileBrowse(event);
@@ -28,7 +28,7 @@ export class FileUploaderComponent {
       }
     }
 
-    handleFileBrowse(file: File): void {
+    private handleFileBrowse(file: File): void {
         const tempReader = new FileReader();
         if (window.localStorage.getItem(file.name) === null) {
             tempReader.onload = (event) => {
@@ -37,15 +37,15 @@ export class FileUploaderComponent {
             };
             tempReader.readAsDataURL(file);
         } else {
-            this.openDialog();
+            FileUploaderComponent.openDialog();
         }
     }
 
-    addToStorage(file): void {
+    private addToStorage(file): void {
       this.certificateService.upload(this.fileName, file);
     }
 
-    openDialog(): void {
+    private static openDialog(): void {
       alert('This file is exist');
     }
 }
