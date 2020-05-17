@@ -1,4 +1,4 @@
-import { Directive, Output, EventEmitter, HostBinding, HostListener} from '@angular/core';
+import {Directive, EventEmitter, HostBinding, HostListener, Output} from '@angular/core';
 
 const BASIC_COLOR = 'rgba(231,233,255,0.98)';
 const DRAG_COLOR = '#6a6bff';

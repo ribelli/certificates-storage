@@ -42,7 +42,7 @@ export class FileUploaderComponent {
     }
 
     private addToStorage(file): void {
-      this.certificateService.upload(this.fileName, file);
+      this.certificateService.uploadCertificate(this.fileName, file);
     }
 
     private static openDialog(): void {

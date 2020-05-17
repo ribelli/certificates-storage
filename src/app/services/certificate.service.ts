@@ -1,7 +1,7 @@
 import {Injectable, NgModule} from '@angular/core';
 import {BrowserModule} from '@angular/platform-browser';
 import {Certificate} from 'pkijs';
-import {Observable, Subject} from 'rxjs';
+import {Observable, ReplaySubject, Subject} from 'rxjs';
 import {CERTIFICATE_MAP} from '../entities/certificate-map';
 import {format} from 'date-fns';
 import * as asn1js from 'asn1js';
@@ -15,29 +15,28 @@ import * as asn1js from 'asn1js';
 })
 export class CertificateService {
   private static certificateMap = CERTIFICATE_MAP;
-  private fileList: Certificate[] = [];
-  private fileList$: Subject<string[]> = new Subject<string[]>();
+  private fileList: Certificate[] = new Array<Certificate>();
+  private fileList$: Subject<Certificate[]> = new ReplaySubject<Certificate[]>(1);
 
-  public upload(fileName: string, fileContent: any): void {
-    this.fileList.push(fileName);
+  public uploadCertificate(certificateName: string, certificateContent: any): void {
+    this.fileList.push(certificateName);
     this.fileList$.next(this.fileList);
-    CertificateService.saveToStorage(fileName, fileContent);
+    CertificateService.saveToStorage(certificateName, certificateContent);
   }
 
   public get(): void {
     this.fileList$.next(this.fileList);
   }
 
-  public remove(fileName): void {
+  public removeCertificate(certificateName: string): void {
     this.fileList.splice(
-      this.fileList.findIndex(name => name === fileName),
-      1
-    );
+      this.fileList.findIndex(name => name === certificateName),
+      1);
     this.fileList$.next(this.fileList);
-    window.localStorage.removeItem(fileName);
+    window.localStorage.removeItem(certificateName);
   }
 
-  public getListFromStorage(): Observable<string[]> {
+  public getListFromStorage() {
     for (let i = 0; i < window.localStorage.length; i++) {
       let currentObject = Object.entries(window.localStorage)[i];
       if (currentObject[1].startsWith('data:application/x-x509-ca-cert;base64,')){
@@ -45,7 +44,7 @@ export class CertificateService {
       }
     }
 
-    return this.fileList$;
+    return this.fileList$.asObservable();
   }
 
   public static decodingCertificate(element) {
@@ -56,7 +55,7 @@ export class CertificateService {
     }
 
     const certificate = new Certificate({ schema: asn1Result.result });
-    console.log(certificate)
+    console.log(certificate);
 
     return {
       notBefore: CertificateService.trimUTCformat(certificate.notBefore),
@@ -82,11 +81,11 @@ export class CertificateService {
     return arr;
   }
 
-  private static saveToStorage(key: string, b64Result: string) {
+  private static saveToStorage(key: string, b64Result: string): void {
     window.localStorage.setItem(key, b64Result);
   }
 
-  public static getFromStorage(key: string) {
+  public static getFromStorage(key: string): string {
     return window.localStorage.getItem(key);
   }
 
@@ -95,14 +94,14 @@ export class CertificateService {
     return format(new Date(typeOfDate.value.toString()),currentFormat);
   }
 
-  public static base64ToArrayBuffer(base64) {
+  public static base64ToArrayBuffer(base64: string) {
     let startIndex = base64.indexOf('base64,') + 7;
     let b64 = base64.substr(startIndex);
     let binaryString = atob(b64);
-    let bytes = new Uint8Array(binaryString.length);
+    let bytesArray = new Uint8Array(binaryString.length);
     for (let i = 0; i < binaryString.length; i++) {
-      bytes[i] = binaryString.charCodeAt(i);
+      bytesArray[i] = binaryString.charCodeAt(i);
     }
-    return bytes.buffer;
+    return bytesArray.buffer;
   }
 }
