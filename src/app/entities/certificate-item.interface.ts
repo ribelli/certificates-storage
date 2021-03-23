@@ -1,8 +1,8 @@
 export interface CertificateItem {
   commonName: string;
   country: string;
-  region: string,
-  city: string,
+  region: string;
+  city: string;
   issuerCN: string;
   validFrom: string;
   validTill: string;
@@ -12,40 +12,40 @@ export interface CertificateItem {
 }
 
 export interface ICertificate {
-  tbs: ArrayBuffer,
-  version: number,
+  tbs: ArrayBuffer;
+  version: number;
   notBefore: {
-    type: number,
+    type: number;
     value: object
-  },
+  };
   notAfter: {
-    type: number,
+    type: number;
     value: object
-  },
+  };
   issuer: {
     typesAndValues: [
       {
-        type: string,
+        type: string;
         value: {
           valueBlock: {
             value: string
           }
         }
       }
-    ],
+    ];
     valueBeforeDecode: ArrayBuffer
-  },
+  };
   subject: {
     typesAndValues: [
       {
-        type: string,
+        type: string;
         value: {
           valueBlock: {
             value: string
           }
         }
       }
-    ],
+    ];
     valueBeforeDecode: ArrayBuffer
-  },
+  };
 }

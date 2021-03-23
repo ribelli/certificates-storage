@@ -4,7 +4,11 @@ import {CSAComponentsModule} from './components/components.module';
 import {AppComponent} from './app.component';
 import {AppRoutingModule} from './app-routing.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import {MatButtonModule} from '@angular/material';
+import {MatButtonModule} from '@angular/material/button';
+
+import { StoreModule } from '@ngrx/store';
+import {certificateReducer} from './store/reducer';
+
 
 @NgModule({
   declarations: [
@@ -16,6 +20,7 @@ import {MatButtonModule} from '@angular/material';
     CSAComponentsModule,
     BrowserAnimationsModule,
     MatButtonModule,
+    StoreModule.forRoot({certificates: certificateReducer})
   ],
   exports: [
     AppComponent,

@@ -7,7 +7,8 @@ import {RowTableComponent} from './items-table/table-row/row-table.component';
 import {FileUploaderComponent} from './file-uploader/file-uploader.component';
 import {DragAndDropDirective} from '../directives/drag-and-drop/drag-and-drop.directive';
 import {CommonModal} from './common-modal/common-modal.component';
-import {MatButtonModule, MatDialogModule} from '@angular/material';
+import {MatDialogModule} from '@angular/material/dialog';
+import {MatButtonModule} from '@angular/material/button';
 
 
 @NgModule({

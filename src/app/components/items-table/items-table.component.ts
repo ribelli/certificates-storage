@@ -1,10 +1,12 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {Certificate} from 'pkijs';
-import {MatDialog, MatDialogConfig} from '@angular/material';
+import {MatDialog, MatDialogConfig} from '@angular/material/dialog';
 import {CommonModal, DialogData} from '../common-modal/common-modal.component';
-import {Observable, Subject} from 'rxjs';
+import {Observable} from 'rxjs';
 import {CertificateService} from '../../services/certificate.service';
-import {takeUntil} from 'rxjs/operators';
+
+import { Store } from '@ngrx/store';
+import { AppState } from '../../app.state';
 
 
 const HEADER_TEXT = 'Existing certificates:';
@@ -16,33 +18,21 @@ const EMPTY_LIST = 'Unfortunately, this list is empty';
   styleUrls: ['./items-table.component.scss']
 })
 
-export class ItemsTableComponent implements OnInit, OnDestroy {
+export class ItemsTableComponent implements OnInit {
   private headerText: string = HEADER_TEXT;
   private emptyListOfCertificates: string = EMPTY_LIST;
-  public fileList$: Observable<Certificate[]>|null = this.certificateService.getListFromStorage();
-  public fileList: Certificate[] = [];
-  private unsubscribe$ = new Subject<void>();
+  public fileList$: Observable<Certificate[]>;
 
   constructor (
     private dialog: MatDialog,
-    private certificateService: CertificateService
-  ) {}
-
-  ngOnInit(): void {
-    this.fileList$
-      .pipe(takeUntil(this.unsubscribe$))
-      .subscribe(
-        fileList => {
-            this.fileList = fileList;
-          }
-      );
-
-    this.certificateService.get();
+    private certificateService: CertificateService,
+    private store: Store<AppState>
+  ) {
+    this.fileList$ = this.store.select(state => state.certificates);
   }
 
-  ngOnDestroy() {
-    this.unsubscribe$.next();
-    this.unsubscribe$.complete();
+  ngOnInit(): void {
+    this.certificateService.getListFromStorage();
   }
 
   showCurrentCertificateInfo(certificate: string): void {
@@ -60,11 +50,7 @@ export class ItemsTableComponent implements OnInit, OnDestroy {
   }
 
   mapKeyValueFromStorage(certificate: string) {
-    return CertificateService.getFromStorage(this.getKeyByValue(certificate));
-  }
-
-  getKeyByValue(value: string): string {
-    return Object.keys(window.localStorage).find(key => key === value);
+    return this.certificateService.getCertificateByName(certificate);
   }
 
   onElementDeleted(certificateName: string): void {
@@ -82,9 +68,5 @@ export class ItemsTableComponent implements OnInit, OnDestroy {
        }
     } as DialogData;
     this.dialog.open<CommonModal, DialogData, void>(CommonModal, config);
-  }
-
-  trackByID(index: number, item: string): number {
-    return index;
   }
 }

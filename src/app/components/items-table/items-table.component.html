@@ -1,9 +1,9 @@
 <div class="items-table">
   <div class="items-table__header">{{ headerText }}</div>
-  <div *ngIf="fileList.length === 0">{{ emptyListOfCertificates }}</div>
+  <div *ngIf="(fileList$ | async).length === 0">{{ emptyListOfCertificates }}</div>
   <div class="items-table__list">
     <app-row-table
-      *ngFor="let certificate of fileList$ | async; trackBy: trackByID;"
+      *ngFor="let certificate of fileList$ | async"
       [item]="certificate"
       (click)="showCurrentCertificateInfo(certificate)"
       (elementDeleted)="onElementDeleted(certificate)"></app-row-table>
