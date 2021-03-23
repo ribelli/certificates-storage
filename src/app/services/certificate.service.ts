@@ -6,7 +6,7 @@ import {format} from 'date-fns';
 import * as asn1js from 'asn1js';
 
 import {AppState} from '../app.state';
-import * as Actions from '../store/actions/certificate';
+import {CertificateActions} from '../store/actions/index';
 import {LocalStorageService} from './local-storage.service';
 
 import {CERTIFICATE_MAP} from '../entities/certificate-map';
@@ -86,12 +86,12 @@ export class CertificateService {
   }
 
   private storeAddCertificate(name: string, content: any): void {
-    this.store.dispatch(new Actions.AddCertificate(name));
+    this.store.dispatch(new CertificateActions.AddCertificate(name));
     this.localStorageService.setItem(name, content);
   }
 
   private storeRemoveCertificate(name: string): void {
-    this.store.dispatch(new Actions.RemoveCertificate(name));
+    this.store.dispatch(new CertificateActions.RemoveCertificate(name));
     this.localStorageService.removeItem(name);
   }
 
