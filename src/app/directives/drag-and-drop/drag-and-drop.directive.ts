@@ -33,7 +33,7 @@ export class DragAndDropDirective {
     event.stopPropagation();
     this.background = DROP_COLOR;
     this.opacity = BASIC_OPACITY;
-    let files = event.dataTransfer.files;
+    const files = event.dataTransfer.files;
     if (files.length > 0) {
       this.onFileDropped.emit(files);
     }

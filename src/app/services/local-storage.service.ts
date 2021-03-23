@@ -50,8 +50,4 @@ export class LocalStorageService {
   removeItem(key: string): void {
     localStorage.removeItem(key);
   }
-
-  static findItemByValue(value: string): string | null {
-    return Object.keys(localStorage).find(key => key === value);
-  }
 }
