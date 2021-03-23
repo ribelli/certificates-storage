@@ -51,5 +51,5 @@ ng e2e
 
 ### Possible improvements
 
- - Add effects to Redux;
+ - Add effects to NgRx in order to propagate changes from LocalStorage to Store;
  - Add some e2e and unit tests;
