@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { CertificateItem } from '../../../entities/certificate-item.interface';
+import { ICertificate } from '../../../store/models/certificate';
 import {
     trigger,
     style,
@@ -25,7 +25,7 @@ import {
 })
 
 export class RowTableComponent {
-    @Input() public item: CertificateItem;
+    @Input() public item: ICertificate;
     @Output() public elementDeleted: EventEmitter<void> = new EventEmitter();
 
     private deleteElement(): void {

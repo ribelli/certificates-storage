@@ -10,20 +10,23 @@ const UPLOAD_TEXT = 'Drop or upload your certificate here to send them';
 })
 
 export class FileUploaderComponent {
+
+    constructor(private certificateService: CertificateService) { }
     private uploadText: string = UPLOAD_TEXT;
     private fileName: string;
     private files: any = [];
 
-    constructor(private certificateService: CertificateService) { }
+    private static openDialog(): void {
+      alert('This file already exists');
+    }
 
     private fileChanged(event): void {
       if (typeof event.target === 'undefined') {
           this.fileName = event.name;
           this.handleFileBrowse(event);
-      }
-      else if (event.target.files && event.target.files.length) {
+      } else if (event.target.files && event.target.files.length) {
           this.fileName = event.target.files[0].name;
-          let file = event.target.files[0];
+          const file = event.target.files[0];
           this.handleFileBrowse(file);
       }
     }
@@ -43,9 +46,5 @@ export class FileUploaderComponent {
 
     private addToStorage(file): void {
       this.certificateService.uploadCertificate(this.fileName, file);
-    }
-
-    private static openDialog(): void {
-      alert('This file is exist');
     }
 }
