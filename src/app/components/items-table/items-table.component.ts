@@ -1,12 +1,13 @@
 import {Component, OnInit} from '@angular/core';
-import {Certificate} from 'pkijs';
-import {MatDialog, MatDialogConfig} from '@angular/material/dialog';
-import {CommonModal, DialogData} from '../common-modal/common-modal.component';
 import {Observable} from 'rxjs';
-import {CertificateService} from '../../services/certificate.service';
-
+import {Certificate} from 'pkijs';
 import { Store } from '@ngrx/store';
-import { AppState } from '../../app.state';
+
+import {MatDialog, MatDialogConfig} from '@angular/material/dialog';
+
+import {AppState} from '../../app.state';
+import {CommonModal, DialogData} from '../common-modal/common-modal.component';
+import {CertificateService} from '../../services/certificate.service';
 
 
 const HEADER_TEXT = 'Existing certificates:';
