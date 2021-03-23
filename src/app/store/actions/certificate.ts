@@ -1,17 +1,17 @@
 import { Action } from '@ngrx/store';
 
 export enum CertificateActionTypes {
-  ADD_CERTIFICATE = 'ADD_CERTIFICATE',
-  REMOVE_CERTIFICATE = 'REMOVE_CERTIFICATE'
+  certificateAdd = '[Certificate] add',
+  certificateRemove = '[Certificate] remove'
 }
 
 export class AddCertificate implements Action {
-  readonly type = CertificateActionTypes.ADD_CERTIFICATE;
+  readonly type = CertificateActionTypes.certificateAdd;
   constructor(public payload: string) {}
 }
 
 export class RemoveCertificate implements Action {
-  readonly type = CertificateActionTypes.REMOVE_CERTIFICATE;
+  readonly type = CertificateActionTypes.certificateRemove;
   constructor(public payload: string) {}
 }
 

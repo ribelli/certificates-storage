@@ -6,7 +6,7 @@ import { Store } from '@ngrx/store';
 import {MatDialog, MatDialogConfig} from '@angular/material/dialog';
 
 import {AppState} from '../../app.state';
-import {CommonModal, DialogData} from '../common-modal/common-modal.component';
+import {CommonModalComponent, DialogData} from '../common-modal/common-modal.component';
 import {CertificateService} from '../../services/certificate.service';
 
 
@@ -20,15 +20,13 @@ const EMPTY_LIST = 'Unfortunately, this list is empty';
 })
 
 export class ItemsTableComponent implements OnInit {
+  public fileList$: Observable<Certificate[]>;
   private headerText: string = HEADER_TEXT;
   private emptyListOfCertificates: string = EMPTY_LIST;
-  public fileList$: Observable<Certificate[]>;
 
-  constructor (
-    private dialog: MatDialog,
-    private certificateService: CertificateService,
-    private store: Store<AppState>
-  ) {
+  constructor(private dialog: MatDialog,
+              private certificateService: CertificateService,
+              private store: Store<AppState>) {
     this.fileList$ = this.store.select(state => state.certificates);
   }
 
@@ -40,7 +38,7 @@ export class ItemsTableComponent implements OnInit {
     this.openDialog(certificate, this.getCertificateInfo(certificate));
   }
 
-  getCertificateInfo(certificate: string): object {
+  getCertificateInfo(certificate: string): Certificate {
     const currentCertificate = this.mapKeyValueFromStorage(certificate);
     const arrayBuffer = CertificateService.base64ToArrayBuffer(currentCertificate);
 
@@ -68,6 +66,6 @@ export class ItemsTableComponent implements OnInit {
          text: '',
        }
     } as DialogData;
-    this.dialog.open<CommonModal, DialogData, void>(CommonModal, config);
+    this.dialog.open<CommonModalComponent, DialogData, void>(CommonModalComponent, config);
   }
 }

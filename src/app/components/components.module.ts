@@ -6,7 +6,7 @@ import {FormsModule} from '@angular/forms';
 import {MatButtonModule} from '@angular/material/button';
 import {MatDialogModule} from '@angular/material/dialog';
 
-import {CommonModal} from './common-modal/common-modal.component';
+import {CommonModalComponent} from './common-modal/common-modal.component';
 import {ItemsTableComponent} from './items-table/items-table.component';
 import {FileUploaderComponent} from './file-uploader/file-uploader.component';
 import {RowTableComponent} from './items-table/table-row/row-table.component';
@@ -15,7 +15,7 @@ import {DragAndDropDirective} from '../directives/drag-and-drop/drag-and-drop.di
 
 
 export const COMPONENTS = [
-  CommonModal,
+  CommonModalComponent,
   ItemsTableComponent,
   FileUploaderComponent,
   RowTableComponent,
@@ -38,7 +38,7 @@ export const COMPONENTS = [
     MatButtonModule,
     MatDialogModule
   ],
-  entryComponents: [CommonModal],
+  entryComponents: [CommonModalComponent],
 })
 
 export class CSAComponentsModule { }

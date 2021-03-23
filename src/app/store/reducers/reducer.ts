@@ -1,18 +1,18 @@
 import {Certificate} from 'pkijs';
 import {CertificateActionTypes, CertificateActions} from '../actions/certificate';
 
-export let initialState: Certificate = [];
+export const initialState: Certificate = [];
 
-export function certificateReducer(state = initialState, action: CertificateActions) {
+export const certificateReducer = (state = initialState, action: CertificateActions) => {
   switch (action.type) {
-    case CertificateActionTypes.ADD_CERTIFICATE:
+    case CertificateActionTypes.certificateAdd:
       return [...state, action.payload];
 
-    case CertificateActionTypes.REMOVE_CERTIFICATE:
+    case CertificateActionTypes.certificateRemove:
       const index = state.findIndex(name => name === action.payload);
       return [...state.slice(0, index), ...state.slice(index + 1)];
 
     default:
       return state;
   }
-}
+};
