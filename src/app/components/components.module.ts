@@ -1,23 +1,30 @@
 import {NgModule} from '@angular/core';
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {CommonModule} from '@angular/common';
 import {FormsModule} from '@angular/forms';
-import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
-import {ItemsTableComponent} from './items-table/items-table.component';
-import {RowTableComponent} from './items-table/table-row/row-table.component';
-import {FileUploaderComponent} from './file-uploader/file-uploader.component';
-import {DragAndDropDirective} from '../directives/drag-and-drop/drag-and-drop.directive';
-import {CommonModal} from './common-modal/common-modal.component';
-import {MatDialogModule} from '@angular/material/dialog';
-import {MatButtonModule} from '@angular/material/button';
 
+import {MatButtonModule} from '@angular/material/button';
+import {MatDialogModule} from '@angular/material/dialog';
+
+import {CommonModal} from './common-modal/common-modal.component';
+import {ItemsTableComponent} from './items-table/items-table.component';
+import {FileUploaderComponent} from './file-uploader/file-uploader.component';
+import {RowTableComponent} from './items-table/table-row/row-table.component';
+
+import {DragAndDropDirective} from '../directives/drag-and-drop/drag-and-drop.directive';
+
+
+export const COMPONENTS = [
+  CommonModal,
+  ItemsTableComponent,
+  FileUploaderComponent,
+  RowTableComponent,
+];
 
 @NgModule({
   declarations: [
-    ItemsTableComponent,
-    RowTableComponent,
-    FileUploaderComponent,
+    COMPONENTS,
     DragAndDropDirective,
-    CommonModal
   ],
   imports: [
     CommonModule,
@@ -27,17 +34,11 @@ import {MatButtonModule} from '@angular/material/button';
     MatDialogModule,
   ],
   exports: [
-    ItemsTableComponent,
-    RowTableComponent,
-    FileUploaderComponent,
-    CommonModal,
+    COMPONENTS,
     MatButtonModule,
     MatDialogModule
   ],
   entryComponents: [CommonModal],
-  providers: [],
-  bootstrap: []
 })
 
-export class CSAComponentsModule {
-}
+export class CSAComponentsModule { }

@@ -1,31 +1,32 @@
-import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
-import {CSAComponentsModule} from './components/components.module';
-import {AppComponent} from './app.component';
-import {AppRoutingModule} from './app-routing.module';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import {BrowserModule} from '@angular/platform-browser';
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import {NgModule} from '@angular/core';
+import {StoreModule} from '@ngrx/store';
+
 import {MatButtonModule} from '@angular/material/button';
 
-import { StoreModule } from '@ngrx/store';
+import {AppRoutingModule} from './app-routing.module';
 import {certificateReducer} from './store/reducer';
 
+import {AppComponent} from './components/app/app.component';
+import {CSAComponentsModule} from './components/components.module';
 
 @NgModule({
   declarations: [
     AppComponent,
   ],
   imports: [
-    BrowserModule,
     AppRoutingModule,
-    CSAComponentsModule,
     BrowserAnimationsModule,
+    BrowserModule,
+    CSAComponentsModule,
     MatButtonModule,
     StoreModule.forRoot({certificates: certificateReducer})
   ],
   exports: [
     AppComponent,
   ],
-  providers: [],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {
+}
