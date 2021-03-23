@@ -1,9 +1,9 @@
 import {Certificate} from 'pkijs';
-import {CertificateActionTypes, CertificateActions} from './actions';
+import {CertificateActionTypes, CertificateActions} from '../actions/certificate';
 
 export let initialState: Certificate = [];
 
-export function certificateReducer(state= initialState, action: CertificateActions) {
+export function certificateReducer(state = initialState, action: CertificateActions) {
   switch (action.type) {
     case CertificateActionTypes.ADD_CERTIFICATE:
       return [...state, action.payload];

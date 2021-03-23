@@ -1,15 +1,17 @@
 import {Injectable, NgModule} from '@angular/core';
+import {Store} from '@ngrx/store';
 import {BrowserModule} from '@angular/platform-browser';
 import {Certificate} from 'pkijs';
-import {CERTIFICATE_MAP} from '../entities/certificate-map';
 import {format} from 'date-fns';
 import * as asn1js from 'asn1js';
 
-import {Store} from '@ngrx/store';
 import {AppState} from '../app.state';
+import * as Actions from '../store/actions/certificate';
 import {LocalStorageService} from './local-storage.service';
-import * as Actions from '../store/actions';
+
+import {CERTIFICATE_MAP} from '../entities/certificate-map';
 import {CERTIFICATE_MIME_TYPES} from '../entities/certificate-map';
+
 
 @Injectable({
   providedIn: 'root',
@@ -75,8 +77,8 @@ export class CertificateService {
   }
 
   private static isCertificateValid(value: string): boolean {
-    for (const cert_type of CERTIFICATE_MIME_TYPES) {
-      if (value.startsWith('data:' + cert_type)) {
+    for (const certificateType of CERTIFICATE_MIME_TYPES) {
+      if (value.startsWith('data:' + certificateType)) {
         return true;
       }
     }
