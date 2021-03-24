@@ -1,5 +1,5 @@
 import {Certificate} from 'pkijs';
-import {CertificateActionTypes, CertificateActions} from '../actions/certificate.actions';
+import {CertificateActionTypes, CertificateActions} from '@store/actions/certificate.actions';
 
 export const initialState: Certificate = [];
 

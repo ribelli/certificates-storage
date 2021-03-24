@@ -2,10 +2,24 @@
   "extends": "../tsconfig.json",
   "compilerOptions": {
     "outDir": "../out-tsc/app",
+    "baseUrl": "./",
+    "paths": {
+      "@app/*": ["app/*"],
+      "@components/*": ["app/components/*"],
+      "@directives/*": ["app/directives/*"],
+      "@store/*": ["app/store/*"],
+      "@services/*": ["app/services/*"]
+    },
     "types": []
   },
   "exclude": [
     "test.ts",
     "**/*.spec.ts"
-  ]
+  ],
+  "angularCompilerOptions": {
+    "annotationsAs": "static fields",
+    "annotateForClosureCompiler": true,
+    "preserveWhitespaces": false,
+    "fullTemplateTypeCheck": true
+  }
 }

@@ -5,9 +5,9 @@ import { Store } from '@ngrx/store';
 
 import {MatDialog, MatDialogConfig} from '@angular/material/dialog';
 
-import {AppState} from '../../app.state';
+import {AppState} from '@app/app.state';
 import {CommonModalComponent, DialogData} from '../common-modal/common-modal.component';
-import {CertificateService} from '../../services/certificate.service';
+import {CertificateService} from '@services/certificate.service';
 
 
 const HEADER_TEXT = 'Existing certificates:';
