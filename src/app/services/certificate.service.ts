@@ -5,8 +5,8 @@ import {Certificate} from 'pkijs';
 import {format} from 'date-fns';
 import * as asn1js from 'asn1js';
 
-import {AppState} from '../app.state';
-import {CertificateActions} from '../store/actions/index';
+import {AppState} from '@app/app.state';
+import {CertificateActions} from '@store/actions/index';
 import {LocalStorageService} from './local-storage.service';
 
 import {CERTIFICATE_MAP} from '../entities/certificate-map';

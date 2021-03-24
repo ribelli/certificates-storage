@@ -5,11 +5,11 @@ import {StoreModule} from '@ngrx/store';
 
 import {MatButtonModule} from '@angular/material/button';
 
-import {AppRoutingModule} from './app-routing.module';
-import {certificateReducer} from './store/reducers/certificate.reducer';
+import {AppRoutingModule} from '@app/app-routing.module';
+import {certificateReducer} from '@store/reducers/certificate.reducer';
 
-import {AppComponent} from './components/app/app.component';
-import {CSAComponentsModule} from './components/components.module';
+import {AppComponent} from '@components/app/app.component';
+import {CSAComponentsModule} from '@components/components.module';
 
 @NgModule({
   declarations: [

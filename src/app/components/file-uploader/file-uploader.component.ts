@@ -1,5 +1,5 @@
 import {Component} from '@angular/core';
-import {CertificateService} from '../../services/certificate.service';
+import {CertificateService} from '@services/certificate.service';
 
 const UPLOAD_TEXT = 'Drop or upload your certificate here to send them';
 
@@ -12,7 +12,7 @@ const UPLOAD_TEXT = 'Drop or upload your certificate here to send them';
 export class FileUploaderComponent {
 
     constructor(private certificateService: CertificateService) { }
-    private uploadText: string = UPLOAD_TEXT;
+    uploadText: string = UPLOAD_TEXT;
     private fileName: string;
     private files: any = [];
 

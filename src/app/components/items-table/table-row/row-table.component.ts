@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { ICertificate } from '../../../store/models/certificate';
+import { ICertificate } from '@store/models/certificate';
 import {
     trigger,
     style,

@@ -11,7 +11,7 @@ import {ItemsTableComponent} from './items-table/items-table.component';
 import {FileUploaderComponent} from './file-uploader/file-uploader.component';
 import {RowTableComponent} from './items-table/table-row/row-table.component';
 
-import {DragAndDropDirective} from '../directives/drag-and-drop/drag-and-drop.directive';
+import {DragAndDropDirective} from '@directives/drag-and-drop/drag-and-drop.directive';
 
 
 export const COMPONENTS = [
