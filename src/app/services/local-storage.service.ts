@@ -39,12 +39,16 @@ export class LocalStorageService {
     }, {});
   }
 
-  setItem(key: string, value: string): any {
+  setItem(key: string, value: string): void {
     localStorage.setItem(key, value);
   }
 
   getItem(key: string): string | null {
     return localStorage.getItem(key);
+  }
+
+  keys(): string[] {
+    return Object.keys(localStorage);
   }
 
   removeItem(key: string): void {

@@ -1,3 +1,4 @@
+import {NO_ERRORS_SCHEMA} from '@angular/core';
 import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
 import { AppComponent } from './app.component';
 import {StoreModule} from '@ngrx/store';
@@ -13,6 +14,8 @@ describe('AppComponent', () => {
       declarations: [
         AppComponent
       ],
+      // Shallow test: child components are covered by their own specs.
+      schemas: [NO_ERRORS_SCHEMA],
     })
       .compileComponents()
       .then(() => {

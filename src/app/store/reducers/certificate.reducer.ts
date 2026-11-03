@@ -1,16 +1,14 @@
-import {Certificate} from 'pkijs';
 import {CertificateActionTypes, CertificateActions} from '@store/actions/certificate.actions';
 
-export const initialState: Certificate = [];
+export const initialState: string[] = [];
 
-export const certificateReducer = (state = initialState, action: CertificateActions) => {
+export const certificateReducer = (state: string[] = initialState, action: CertificateActions): string[] => {
   switch (action.type) {
     case CertificateActionTypes.certificateAdd:
-      return [...state, action.payload];
+      return state.includes(action.payload) ? state : [...state, action.payload];
 
     case CertificateActionTypes.certificateRemove:
-      const index = state.findIndex(name => name === action.payload);
-      return [...state.slice(0, index), ...state.slice(index + 1)];
+      return state.filter(name => name !== action.payload);
 
     default:
       return state;
