@@ -5,6 +5,7 @@ import {FormsModule} from '@angular/forms';
 
 import {MatButtonModule} from '@angular/material/button';
 import {MatDialogModule} from '@angular/material/dialog';
+import {MatSnackBarModule} from '@angular/material/snack-bar';
 
 import {CommonModalComponent} from './common-modal/common-modal.component';
 import {ItemsTableComponent} from './items-table/items-table.component';
@@ -32,6 +33,7 @@ export const COMPONENTS = [
     BrowserAnimationsModule,
     MatButtonModule,
     MatDialogModule,
+    MatSnackBarModule,
   ],
   exports: [
     COMPONENTS,

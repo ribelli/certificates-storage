@@ -1,5 +1,4 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { ICertificate } from '@store/models/certificate';
 import {
     trigger,
     style,
@@ -25,10 +24,11 @@ import {
 })
 
 export class RowTableComponent {
-    @Input() public item: ICertificate;
+    @Input() public item: string;
     @Output() public elementDeleted: EventEmitter<void> = new EventEmitter();
 
-    private deleteElement(): void {
+    deleteElement(event: MouseEvent): void {
+        event.stopPropagation();
         this.elementDeleted.emit();
     }
 }
