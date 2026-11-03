@@ -1,7 +1,7 @@
 <div class="c-row" [@slideInOut]>
   <div class="c-row__item">
     <div>{{item}}</div>
-    <button class="c-row__button" (click)="deleteElement()">
+    <button class="c-row__button" (click)="deleteElement($event)">
       Delete
     </button>
   </div>

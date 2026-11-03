@@ -1,71 +1,57 @@
 import {Component, OnInit} from '@angular/core';
 import {Observable} from 'rxjs';
-import {Certificate} from 'pkijs';
-import { Store } from '@ngrx/store';
+import {Store} from '@ngrx/store';
 
 import {MatDialog, MatDialogConfig} from '@angular/material/dialog';
+import {MatSnackBar} from '@angular/material/snack-bar';
 
 import {AppState} from '@app/app.state';
 import {CommonModalComponent, DialogData} from '../common-modal/common-modal.component';
 import {CertificateService} from '@services/certificate.service';
-
+import {CertificateError} from '@services/certificate-parser';
 
 const HEADER_TEXT = 'Existing certificates:';
 const EMPTY_LIST = 'Unfortunately, this list is empty';
+const SNACKBAR_DURATION_MS = 5000;
 
 @Component({
   selector: 'app-items-table',
   templateUrl: './items-table.component.html',
   styleUrls: ['./items-table.component.scss']
 })
-
 export class ItemsTableComponent implements OnInit {
-  public fileList$: Observable<Certificate[]>;
-  private headerText: string = HEADER_TEXT;
-  private emptyListOfCertificates: string = EMPTY_LIST;
+  public fileList$: Observable<string[]>;
+  public headerText: string = HEADER_TEXT;
+  public emptyListOfCertificates: string = EMPTY_LIST;
 
   constructor(private dialog: MatDialog,
+              private snackBar: MatSnackBar,
               private certificateService: CertificateService,
               private store: Store<AppState>) {
     this.fileList$ = this.store.select(state => state.certificates);
   }
 
   ngOnInit(): void {
-    this.certificateService.getListFromStorage();
+    this.certificateService.loadFromStorage();
   }
 
-  showCurrentCertificateInfo(certificate: string): void {
-    this.openDialog(certificate, this.getCertificateInfo(certificate));
-  }
+  showCurrentCertificateInfo(name: string): void {
+    let data: DialogData;
+    try {
+      data = {name, info: this.certificateService.getCertificateInfo(name)};
+    } catch (error) {
+      const message = error instanceof CertificateError ? error.message : 'unexpected error';
+      this.snackBar.open(`${name}: ${message}`, 'OK', {duration: SNACKBAR_DURATION_MS});
+      return;
+    }
 
-  getCertificateInfo(certificate: string): Certificate {
-    const currentCertificate = this.mapKeyValueFromStorage(certificate);
-    const arrayBuffer = CertificateService.base64ToArrayBuffer(currentCertificate);
-
-    return {
-      text: certificate,
-      data: CertificateService.decodingCertificate(arrayBuffer)
-    };
-  }
-
-  mapKeyValueFromStorage(certificate: string) {
-    return this.certificateService.getCertificateByName(certificate);
-  }
-
-  onElementDeleted(certificateName: string): void {
-    this.certificateService.removeCertificate(certificateName);
-  }
-
-  openDialog(certificate: string, generalInfo: object): void {
     const config = new MatDialogConfig<DialogData>();
     config.width = '80vw';
-    config.data = {
-       text: certificate,
-       generalInfo: {
-         info: generalInfo,
-         text: '',
-       }
-    } as DialogData;
+    config.data = data;
     this.dialog.open<CommonModalComponent, DialogData, void>(CommonModalComponent, config);
+  }
+
+  onElementDeleted(name: string): void {
+    this.certificateService.removeCertificate(name);
   }
 }

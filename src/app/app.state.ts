@@ -1,5 +1,4 @@
-import {Certificate} from 'pkijs';
-
 export interface AppState {
-  readonly certificates: Certificate[];
+  /** Names of the stored certificates. */
+  readonly certificates: string[];
 }

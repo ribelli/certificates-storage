@@ -1,23 +1,23 @@
 <div mat-dialog-content class="common-modal">
   <h3 mat-dialog-title class="common-modal__title">
-    {{ data.generalInfo.info.text }}
+    {{ data.name }}
   </h3>
   <div class="content _beige">
-    <p *ngIf="notBefore">Not before: {{ notBefore }}</p>
-    <p *ngIf="notAfter">Not after: {{ notAfter }}</p>
+    <p *ngIf="data.info.notBefore">Not before: {{ data.info.notBefore }}</p>
+    <p *ngIf="data.info.notAfter">Not after: {{ data.info.notAfter }}</p>
   </div>
 
-  <div class="content _light-blue" *ngIf="issuer">
+  <div class="content _light-blue" *ngIf="data.info.issuer.length">
     <h3>ISSUER</h3>
-    <div *ngFor="let data of issuer;">
-      <p>{{ data.name }}: {{ data.value }}</p>
+    <div *ngFor="let attribute of data.info.issuer">
+      <p>{{ attribute.name }}: {{ attribute.value }}</p>
     </div>
   </div>
 
-  <div class="content _light-grey" *ngIf="subject">
+  <div class="content _light-grey" *ngIf="data.info.subject.length">
     <h3>SUBJECT</h3>
-    <div *ngFor="let data of subject">
-      <p>{{ data.name }}: {{ data.value }}</p>
+    <div *ngFor="let attribute of data.info.subject">
+      <p>{{ attribute.name }}: {{ attribute.value }}</p>
     </div>
   </div>
 

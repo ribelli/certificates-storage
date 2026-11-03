@@ -1,23 +1,22 @@
-import {Injectable, NgModule} from '@angular/core';
+import {Injectable} from '@angular/core';
 import {Store} from '@ngrx/store';
-import {BrowserModule} from '@angular/platform-browser';
-import {Certificate} from 'pkijs';
-import {format} from 'date-fns';
-import * as asn1js from 'asn1js';
 
 import {AppState} from '@app/app.state';
 import {CertificateActions} from '@store/actions/index';
 import {LocalStorageService} from './local-storage.service';
+import {
+  arrayBufferToBase64,
+  CertificateError,
+  CertificateInfo,
+  dataUrlToArrayBuffer,
+  parseCertificate,
+  toDer,
+} from './certificate-parser';
 
-import {CERTIFICATE_MAP} from '../entities/certificate-map';
-import {CERTIFICATE_MIME_TYPES} from '../entities/certificate-map';
-
+const STORED_MIME_TYPE = 'application/pkix-cert';
 
 @Injectable({
   providedIn: 'root',
-})
-@NgModule({
-  imports: [BrowserModule],
 })
 export class CertificateService {
 
@@ -25,94 +24,56 @@ export class CertificateService {
               private localStorageService: LocalStorageService) {
   }
 
-  private static certificateMap = CERTIFICATE_MAP;
+  private static parseStoredValue(value: string): CertificateInfo {
+    return parseCertificate(toDer(dataUrlToArrayBuffer(value)));
+  }
 
-  public static decodingCertificate(element) {
-    const asn1Result = asn1js.fromBER(element);
+  public hasCertificate(name: string): boolean {
+    return this.localStorageService.getItem(name) !== null;
+  }
 
-    if (asn1Result.offset === (-1)) {
-      console.log('Can not parse binary data');
+  public addCertificate(name: string, content: ArrayBuffer): void {
+    if (this.hasCertificate(name)) {
+      throw new CertificateError(`Certificate "${name}" already exists`);
     }
 
-    const certificate = new Certificate({schema: asn1Result.result});
+    const der = toDer(content);
+    parseCertificate(der);
 
-    return {
-      notBefore: CertificateService.trimUTCformat(certificate.notBefore),
-      notAfter: CertificateService.trimUTCformat(certificate.notAfter),
-      issuer: CertificateService.getGeneralInfo(certificate, 'issuer'),
-      subject: CertificateService.getGeneralInfo(certificate, 'subject'),
-    };
-  }
-
-  private static getGeneralInfo(certificate: Certificate, value: 'subject' | 'issuer') {
-    const arr = [];
-    for (const typeAndValue of certificate[value].typesAndValues) {
-      let typeValue = CertificateService.certificateMap[typeAndValue.type];
-
-      if (typeof typeValue === 'undefined') {
-        typeValue = typeAndValue.type;
-      }
-
-      const subjectValue = typeAndValue.value.valueBlock.value;
-
-      arr.push({name: typeValue, value: subjectValue});
+    const dataUrl = `data:${STORED_MIME_TYPE};base64,${arrayBufferToBase64(der)}`;
+    try {
+      this.localStorageService.setItem(name, dataUrl);
+    } catch {
+      throw new CertificateError('Not enough browser storage to save this certificate');
     }
-    return arr;
-  }
-
-  static trimUTCformat(typeOfDate) {
-    const currentFormat = 'yyyy/MM/dd';
-    return format(new Date(typeOfDate.value.toString()), currentFormat);
-  }
-
-  public static base64ToArrayBuffer(base64: string) {
-    const startIndex = base64.indexOf('base64,') + 7;
-    const b64 = base64.substr(startIndex);
-    const binaryString = atob(b64);
-    const bytesArray = new Uint8Array(binaryString.length);
-    for (let i = 0; i < binaryString.length; i++) {
-      bytesArray[i] = binaryString.charCodeAt(i);
-    }
-    return bytesArray.buffer;
-  }
-
-  private static isCertificateValid(value: string): boolean {
-    for (const certificateType of CERTIFICATE_MIME_TYPES) {
-      if (value.startsWith('data:' + certificateType)) {
-        return true;
-      }
-    }
-    return false;
-  }
-
-  private storeAddCertificate(name: string, content: any): void {
     this.store.dispatch(new CertificateActions.AddCertificate(name));
-    this.localStorageService.setItem(name, content);
-  }
-
-  private storeRemoveCertificate(name: string): void {
-    this.store.dispatch(new CertificateActions.RemoveCertificate(name));
-    this.localStorageService.removeItem(name);
-  }
-
-  public uploadCertificate(name: string, content: any): void {
-    if (CertificateService.isCertificateValid(content)) {
-      this.storeAddCertificate(name, content);
-    }
   }
 
   public removeCertificate(name: string): void {
-    this.storeRemoveCertificate(name);
+    this.localStorageService.removeItem(name);
+    this.store.dispatch(new CertificateActions.RemoveCertificate(name));
   }
 
-  public getCertificateByName(name: string): string | null {
-    return this.localStorageService.getItem(name);
+  public getCertificateInfo(name: string): CertificateInfo {
+    const value = this.localStorageService.getItem(name);
+    if (value === null) {
+      throw new CertificateError(`Certificate "${name}" not found`);
+    }
+    return CertificateService.parseStoredValue(value);
   }
 
-  public getListFromStorage(): void {
-    for (let i = 0; i < window.localStorage.length; i++) {
-      const currentObject = Object.entries(window.localStorage)[i];
-      this.uploadCertificate(currentObject[0], currentObject[1]);
+  public loadFromStorage(): void {
+    for (const name of this.localStorageService.keys()) {
+      const value = this.localStorageService.getItem(name);
+      if (value === null || !value.startsWith('data:')) {
+        continue;
+      }
+      try {
+        CertificateService.parseStoredValue(value);
+      } catch {
+        continue;
+      }
+      this.store.dispatch(new CertificateActions.AddCertificate(name));
     }
   }
 }
