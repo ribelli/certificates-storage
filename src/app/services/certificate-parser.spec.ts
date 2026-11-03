@@ -1,5 +1,5 @@
 import {arrayBufferToBase64, CertificateError, parseCertificate, toDer} from './certificate-parser';
-import {FAKE_PRIVATE_KEY_PEM, pemToDer, TEST_CERTIFICATE_PEM, textToArrayBuffer} from '../testing/test-certificate';
+import {TEST_PUBLIC_KEY_PEM, pemToDer, TEST_CERTIFICATE_PEM, textToArrayBuffer} from '../testing/test-certificate';
 
 describe('certificate-parser', () => {
   const der = pemToDer(TEST_CERTIFICATE_PEM);
@@ -23,14 +23,14 @@ describe('certificate-parser', () => {
     expect(arrayBufferToBase64(fromPem)).toBe(arrayBufferToBase64(der));
   });
 
-  it('keeps only the certificate from a PEM file that also contains a private key', () => {
-    const bundle = textToArrayBuffer(FAKE_PRIVATE_KEY_PEM + TEST_CERTIFICATE_PEM);
+  it('keeps only the CERTIFICATE block from a PEM file with several blocks (e.g. a bundled key)', () => {
+    const bundle = textToArrayBuffer(TEST_PUBLIC_KEY_PEM + TEST_CERTIFICATE_PEM);
 
     expect(arrayBufferToBase64(toDer(bundle))).toBe(arrayBufferToBase64(der));
   });
 
   it('rejects a PEM file without a certificate', () => {
-    expect(() => toDer(textToArrayBuffer(FAKE_PRIVATE_KEY_PEM))).toThrowError(CertificateError);
+    expect(() => toDer(textToArrayBuffer(TEST_PUBLIC_KEY_PEM))).toThrowError(CertificateError);
   });
 
   it('rejects data that is not ASN.1', () => {

@@ -14,10 +14,11 @@ bThKcCrC86FUlaY=
 -----END CERTIFICATE-----
 `;
 
-// Not a real key: only the PEM armor matters for the tests.
-export const FAKE_PRIVATE_KEY_PEM = `-----BEGIN PRIVATE KEY-----
-TUlJQ2VRSUJBREFOQmdrcWhraUc5dzBCQVFFRkFBU0NBbU13Z2dKZkFnRUFBb0dC
------END PRIVATE KEY-----
+// Public key of TEST_CERTIFICATE_PEM: a PEM block of another type.
+export const TEST_PUBLIC_KEY_PEM = `-----BEGIN PUBLIC KEY-----
+MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAE3Tlqg8E/jglXqdJvonbAOcrBlW9F
+v8RwOEYVecYT54368zVwkyGo3/XME2X6XQ11YfKnCoV9mlmaWl+eImoQaw==
+-----END PUBLIC KEY-----
 `;
 
 export const textToArrayBuffer = (text: string): ArrayBuffer => {
